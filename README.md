@@ -16,7 +16,7 @@ npm install -g bower
 ```
 bower install
 ```
-![Installing Bower](app/images/bower-install.png?raw=true "Installing Bower using CMD")
+![Installing Bower](images/bower-install.png?raw=true "Installing Bower using CMD")
 
 This will result in Bower fetching Bootstrap, JQuery, Font Awesome and Angular files for us and putting them into the bower_components folder.
 
