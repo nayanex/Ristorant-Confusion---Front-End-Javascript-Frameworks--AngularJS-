@@ -186,6 +186,8 @@ Next we will update the code in the column div to create a list of media objects
 </div>
 ```
 
+![ng-repeat usage result](images/usage-of-ng-repeat.png?raw=true "Final result after the usage of ng-repeat")
+
 ####Note
 
  It is interesting to note that you have not written a single line of JavaScript code for this exercise, but still get a lot of dynamic functionality in the page.
