@@ -16,7 +16,7 @@ npm install -g bower
 ```
 bower install
 ```
-![Installing Bower](images/bower-install.png?raw=true "Installing Bower using CMD")
+![Installing Bower](../images/bower-install.png?raw=true "Installing Bower using CMD")
 
 This will result in Bower fetching Bootstrap, JQuery, Font Awesome and Angular files for us and putting them into the bower_components folder.
 
@@ -186,7 +186,7 @@ Next we will update the code in the column div to create a list of media objects
 </div>
 ```
 
-![ng-repeat usage result](images/usage-of-ng-repeat.png?raw=true "Final result after the usage of ng-repeat")
+![ng-repeat usage result](../images/usage-of-ng-repeat.png?raw=true "Final result after the usage of ng-repeat")
 
 ####Note
 
