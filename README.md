@@ -284,5 +284,129 @@ This adds the menuController as the controller for this div, and also assigns an
 
 * The web page itself will show no change, except that the code is now factored out into a controller.
 
+## Angular Filters
+
+Now we are going to create a menu that either presents the whole menu, or parts of the menu as selected by the user. The user will be able to:
+
+* Use Angular filters to filter items based on user's selection
+* Use Bootstrap navigation tabs in conjunction with AngularJS
+* Make use of the ng-class and ng-click Angular directives
+
+#### Setting up Tabbed Navigation for the Menu
+
+* We will now take the help of Bootstrap tabs to set up a tabbed navigation for the menu. We will construct four tabs to display all the menu items, appetizers, mains, and Desserts based on user's selection. Add the following code to the column div, just before the <ul> containing the menu items:
+
+```html
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation">
+        <a aria-controls="all menu" role="tab">The Menu</a>
+    </li>
+    <li role="presentation">
+        <a aria-controls="appetizers" role="tab">Appetizers</a>
+    </li>
+    <li role="presentation">
+        <a aria-controls="mains" role="tab">Mains</a>
+    </li>
+    <li role="presentation">
+        <a aria-controls="desserts" role="tab">Desserts</a>
+    </li>
+</ul>
+```
+You will see the four tabs set up by the above navigation. However clicking on the tabs does not do anything, since we have not set up the logic to activate the tabs.
+
+* Next, enclose the menu `<ul>` inside a `<div>` with class *tab-content*. Also appy the *tab-pane fade in active* class to the ul as shown below:
+
+```html
+    <div class="tab-content">
+        <ul class="media-list tab-pane fade in active">
+            . . .
+        </ul>
+    </div>
+```
+
+Keep the `<li>` item in the `<ul>` as is.
+
+#### Activating the Navigation Tabs
+
+* We will now activate the tabs so that the user can select any of the four tabs. We need to do this by adding some functions to the menucontroller and then use the functions to activate the tabs when selected. First we add a variable named tab to the menucontroller code as follows:
+
+```javascript
+    this.tab = 1;
+```
+Add this as the first statement in the menu controller. Note that the tabs are given indices 1 .. 4. The variable tab will keep track of the currently active tab. By default this will be assigned as the first tab. Obviously, the remaining tabs will be numbered 2 .. 4.
+
+* Whenever the user clicks on a tab, we need to activate that tab. To do this, we take the help of the ng-click Angular directive. This directive will be fired when the user clicks on the tab. To do this, we will add an ng-click directive to every <a> tag within the tabs as follows:
+
+```html
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation">
+        <a ng-click="menuCtrl.select(1)" aria-controls="all menu"              
+           role="tab">The Menu</a>
+    </li>
+    <li role="presentation">
+        <a ng-click="menuCtrl.select(2)" aria-controls="appetizers"
+           role="tab">Appetizers</a>
+    </li>
+    <li role="presentation"> 
+        <a ng-click="menuCtrl.select(3)" aria-controls="mains"
+           role="tab">Mains</a>
+    </li>
+    <li role="presentation">
+        <a  ng-click="menuCtrl.select(4)" aria-controls="desserts"
+            role="tab">Desserts</a>
+    </li>
+</ul>
+```
+
+Note that the complete code is given above, just in case you wish to cut and paste the code. Note how the *ng-click* directives are introduced using 
+*ng-click="menuCtrl.select(i)"*.
+
+* Upon clicking of the tab, the ng-click directive will cause the execution of the select() function in the menucontroller. Next, we need to implement the select() function. Add the following code to the menucontroller to implement the select() function:
+
+```javascript
+this.select = function(setTab) {
+    this.tab = setTab;
+}
+```
+
+This function will set the tab variable to the selected tab index.
+
+Next we take the help of the *ng-class* directive in order to add the Bootstrap *active* class to the selected tab. To do this modify the `<ul>` for the tabs as follows, where you can clearly see the ng-class directive being used:
+
+```html
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" ng-class="{active:menuCtrl.isSelected(1)}">
+        <a ng-click="menuCtrl.select(1)" aria-controls="all menu"
+           role="tab">The Menu</a>
+    </li>
+    <li role="presentation" ng-class="{active:menuCtrl.isSelected(2)}">
+        <a ng-click="menuCtrl.select(2)" aria-controls="appetizers"
+           role="tab">Appetizers</a>
+    </li>
+    <li role="presentation" ng-class="{active:menuCtrl.isSelected(3)}">
+        <a ng-click="menuCtrl.select(3)" aria-controls="mains"
+           role="tab">Mains</a>
+    </li>
+    <li role="presentation" ng-class="{active:menuCtrl.isSelected(4)}">
+        <a  ng-click="menuCtrl.select(4)" aria-controls="desserts"
+            role="tab">Desserts</a>
+    </li>
+</ul>
+```
+Note that for each of the `<li>` elements, we introduced the *ng-class="{active:menuCtrl.isSelected(i)}"* directive. This directive will apply the active class to that element, if the function on the right (that specifies a condition) evaluates to true.
+
+* Next, we need to implement the isSelected() function in the menucontroller. Add the following code to implement this function in the menucontroller:
+
+```javascript
+this.isSelected = function (checkTab) {
+    return (this.tab === checkTab);
+}
+```
+
+This function will return true if the current tab is the same as the tab specified in the function parameter.
+
+* Now the selection of the tabs, and activating the selected tab should work correctly. However no matter which tab is selected, you will still see the list of all menu items.
+
+#### Using Angular Filter
 
 #### Updated: January-9th-2017
