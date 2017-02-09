@@ -409,4 +409,65 @@ This function will return true if the current tab is the same as the tab specifi
 
 #### Using Angular Filter
 
-#### Updated: January-9th-2017
+Next we take the help of the Angular filter to select only those items from the menu corresponding to each tab. Note that each dish object already has a property named *category*. We can use this to filter our items.
+
+We will now set up the filters on the list items in the menu as follows:
+
+```html
+    <li class="media" ng-repeat="dish in menuCtrl.dishes | filter:menuCtrl.filtText">
+```
+
+The above modification implies that the filter will use the variable filtText from the menucontroller to filter the items from the dishes array.
+
+* Next we need to introduce the filtText variable in the menucontroller and have a way of setting it to the appropriate value when the various tabs are selected. To do this, add the following code to the menucontroller:
+
+```javascript
+    this.filtText = '';
+```
+
+We are specifying that initially since the first tab is selected as default, the filtText should not filter out any item from the menu. Hence filtText is set to the empty string.
+
+* Then, whenever a tab is selected, the filtText value should be updated to reflect the selected tab and the corresponding filter value to be applied. To do this, modify the select() function as follows:
+
+```
+    this.select = function(setTab) {
+        this.tab = setTab;
+        if (setTab === 2)
+            this.filtText = "appetizer";
+        else if (setTab === 3)
+            this.filtText = "mains";
+        else if (setTab === 4)
+            this.filtText = "dessert";
+        else
+            this.filtText = "";
+    }
+```
+Note that using the if statements, we are able to set the filtText to the appropriate value.
+
+* Now the application should show the correctly filtered results from the menu items when the tabs are selected.
+
+## Dish Details
+
+#### Task 1
+
+In this task you will display the information about the dish in the page. To do this, you need to complete the following:
+
+* Set up the row to use the dishDetailController
+* Use the Bootstrap Media Object to display the information about the dish.
+
+### Task 2
+
+In this task you will display all the comments from the dish JavaScript object as a list of comments underneath the dish description on the page. To do this, you need to complete the following:
+
+* Use the Bootstrap blockquote class to format the comments. The author and the date information should be in the footer of the blockquote.
+* The date field should be formatted using the Angular date filter.
+* The comments are constructed by iterating over the comments array using the appropriate ng- directive.
+
+### Task 3
+
+In this task you will add the filter to the comments section so that the comments can be ordered according to user's selected criteria. You will use the orderBy filter in Angular to achieve this. To do this, you need to complete the following:
+
+* Set up an input field that enables the user to type in their ordering criteria: *author*, *date* and *rating*. These could be prefixed with a '-' sign to indicate reverse ordering.
+* Set up the orderBy filter on the comments so that the comments will be ordered as per the user's specification.
+
+#### Updated: February-8th-2017
