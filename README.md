@@ -294,7 +294,7 @@ Now we are going to create a menu that either presents the whole menu, or parts 
 
 #### Setting up Tabbed Navigation for the Menu
 
-* We will now take the help of Bootstrap tabs to set up a tabbed navigation for the menu. We will construct four tabs to display all the menu items, appetizers, mains, and Desserts based on user's selection. Add the following code to the column div, just before the <ul> containing the menu items:
+* We will now take the help of Bootstrap tabs to set up a tabbed navigation for the menu. We will construct four tabs to display all the menu items, appetizers, mains, and Desserts based on user's selection. Add the following code to the column div, just before the `<ul>` containing the menu items:
 
 ```html
 <ul class="nav nav-tabs" role="tablist">
