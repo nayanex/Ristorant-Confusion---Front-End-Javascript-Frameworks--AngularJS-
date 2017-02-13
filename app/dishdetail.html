@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0321)https://d3c33hcgiwev3.cloudfront.net/_49c417f481d797cf78b2985d8bded22f_dishdetail.html?Expires=1484438400&Signature=CrsdmDmuWI3hoE9uDfnB7C886dYbdyDcI2BFJbJ81Aqk67dSidzk0t7PltRNP9OetKOX97uu5cR6g66n7bpxuykXUkPyZKv8hC-qmGvr1~N7pH~bNjRBDASlOPovBYvAQmAQnW1mCEpsGXaFbwj~7abgTVyuSmgOhQOVXPQpD7w_&Key-Pair-Id=APKAJLTNE6QMUY6HBC5A -->
-<html lang="en" ng-app="confusionApp"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-     
+<html lang="en" ng-app="confusionApp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head
@@ -21,7 +21,6 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body>
     <div class="container">
         <div class="row row-content" ng-controller="dishDetailController as dishDetailCtrl">
@@ -29,22 +28,31 @@
                 <div class="media-left media-middle">
                     <a href="#">
                         <img class="media-object img-thumbnail" 
-                             ng-src={{dishDetailCtrl.dish.image}} 
-                             alt={{dishDetailCtrl.dish.name}}>
+                             ng-src={{dish.image}} 
+                             alt={{dish.name}}>
                     </a>
                 </div>
                 <div class="media-body">
-                    <h2 class="media-heading">{{dishDetailCtrl.dish.name}}
-                        <span class="label label-danger">{{dishDetailCtrl.dish.label}}</span>
-                        <span class="badge">{{dishDetailCtrl.dish.price | currency}}</span>
+                    <h2 class="media-heading">{{dish.name}}
+                        <span class="label label-danger">{{dish.label}}</span>
+                        <span class="badge">{{dish.price | currency}}</span>
                     </h2>
-                    <p>{{dishDetailCtrl.dish.description}}</p>
+                    <p>{{dish.description}}</p>
                 </div>
             </div>
             <div class="col-xs-9 col-xs-offset-1">
-                <blockquote ng-repeat="comment in dishDetailCtrl.dish.comments | filter:dishDetailCtrl.filtText">
-                    {{comment.comment}}
-                    <footer><cite>{{comment.author}}</cite>, {{comment.date | date :'mediumDate'}}</footer>
+                <div class="fivePxMarginTopBottom">
+                    <h4><strong>Customer Comments</strong><h4>
+                    &nbsp;&nbsp;&nbsp;<label class="sortByLabel" for="sortBy">Sort by:</label>
+                    &nbsp;<input class="smallInput" type="text" name="sortByInput" id="sortByInput"
+                                 ng-model="propertyName">
+                </div>
+                <blockquote ng-repeat="comment in dish.comments | orderBy:propertyName">
+                    <p>{{comment.rating}} Stars</p>
+                    <p>{{comment.comment}}</p>
+                    <p>
+                      <footer><cite>{{comment.author}}</cite>, {{comment.date | date :'mediumDate'}}</footer>
+                    </p>
                 </blockquote>
             </div>
         </div>
@@ -52,10 +60,9 @@
 
     <script src="../bower_components/angular/angular.min.js"></script>
     <script>
-
         var app = angular.module('confusionApp',[]);
         
-        app.controller('dishDetailController', function() {
+        app.controller('dishDetailController', ['$scope', function($scope) {
 
             var dish={
                         name:'Uthapizza',
@@ -97,8 +104,13 @@
                           }
                        ]
                     };
-            this.dish = dish;
-          
-        });
+            $scope.dish = dish;
+            $scope.propertyName = 'date';
+            
+            $scope.sortBy = function(propertyName) {
+              $scope.propertyName = propertyName;
+            };
+        }]);
     </script>
-</body></html>
+</body>
+</html>
