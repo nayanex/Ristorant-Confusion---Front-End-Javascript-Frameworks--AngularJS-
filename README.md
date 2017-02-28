@@ -472,4 +472,393 @@ In this task you will add the filter to the comments section so that the comment
 
 ![dishDetailsPage](app/images/dishDetailsPage.png?raw=true "Dish Details Page")
 
+### Web Tools: Grunt - Task Runner
+
+ You will configure a Grunt file with a set of tasks to build and serve your web project. 
+
+* Install Grunt CLI and Grunt packages in your project 
+* Configure a Grunt file with a set of tasks to build a web project from a source, and serve the built project using a server.
+
+### Installing Grunt
+
+**Note**: You should already have Node and NPM installed on your computer before you proceed further. Also, those using OSX or Linux should use **sudo** while installing **global** packages in node (when you use the **-g** flag).
+
+* At the command prompt, type the following to install Grunt command-line interface (CLI):
+
+`npm install -g grunt-cli`
+
+This will install the Grunt CLI globally so that you can use them in all projects.
+
+* Next, create the *package.json* file in the conFusion folder with the following content:
+
+```json
+{
+  "name": "conFusion",
+  "private": true,
+  "devDependencies": {},
+  
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}
+```
+* Next install Grunt to use within your project. To do this, go to the *conFusion* folder and type the following at the prompt:
+
+`npm install grunt --save-dev`
+
+This will install local per-project Grunt to use within your project.
+
+#### Creating a Grunt File
+
+* Next you need to create a Grunt file containing the configuration for all the tasks to be run when you use Grunt. To do this, create a file named *Gruntfile.js* in the conFusion folder.
+
+* Next, add the following code to Gruntfile.js to set up the file to configure Grunt tasks:
+
+```javascript
+'use strict';
+
+module.exports = function (grunt) {
+  // Define the configuration for all the tasks
+  grunt.initConfig({
+
+  });
+};
+```
+This sets up the Grunt module ready for including the grunt tasks inside the function above.
+
+#### Configuring the Project
+
+* Next, we need to configure the menu.html file for this exercise. Open the menu.html file and update the CSS import lines in the head of the page as follows:
+
+```html
+<!-- Bootstrap -->
+
+<!-- build:css styles/main.css -->
+  <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+  <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="styles/bootstrap-social.css" rel="stylesheet">
+  <link href="styles/mystyles.css" rel="stylesheet">
+<!-- endbuild -->
+```
+
+* Similarly, replace all the script at the bottom of the page with the following code. We will be moving all the Angular script to a separate *app.js* file in the next step.
+
+```html
+<!-- build:js scripts/main.js -->
+  <script src="../bower_components/angular/angular.min.js"></script>
+  <script src="scripts/app.js"></script>
+<!-- endbuild -->
+```
+
+* Next, in the app/scripts folder, create a file named *app.js* and include the following code in this file:
+
+```javascript
+'use strict';
+angular.module('confusionApp', []).controller('menuController', function() {
+  this.tab = 1;
+  this.filtText = '';
+  
+  var dishes = [
+    {
+      name:'Uthapizza',
+      image: 'images/uthapizza.png',
+      category: 'mains',
+      label:'Hot',
+      price:'4.99',
+      description:'A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.',
+      comment: ''
+    },
+    
+    {
+      name:'Zucchipakoda',
+      image: 'images/zucchipakoda.png',
+      category: 'appetizer',
+      label:'',
+      price:'1.99',
+      description:'Deep fried Zucchini coated with mildly spiced Chickpea flour batter accompanied with a sweet-tangy tamarind sauce',
+      comment: ''
+    },
+    
+    {
+      name:'Vadonut',
+      image: 'images/vadonut.png',
+      category: 'appetizer',
+      label:'New',
+      price:'1.99',
+      description:'A quintessential ConFusion experience, is it a vada or is it a donut?',
+      comment: ''
+    },
+    
+    {
+      name:'ElaiCheese Cake',
+      image: 'images/elaicheesecake.png',
+      category: 'dessert',
+      label:'',
+      price:'2.99',
+      description:'A delectable, semi-sweet New York Style Cheese Cake, with Graham cracker crust and spiced with Indian cardamoms',
+      comment: ''
+    }
+  ]; 
+  
+  this.dishes = dishes;
+
+  this.select = function(setTab) {
+    this.tab = setTab;
+    
+    if (setTab === 2) {
+      this.filtText = "appetizer";
+    } 
+    else if (setTab === 3) {
+      this.filtText = "mains";
+    }
+    else if (setTab === 4) {
+      this.filtText = "dessert";
+    }
+    else {
+      this.filtText = "";
+    }
+  };
+  
+  this.isSelected = function (checkTab) {
+    return (this.tab === checkTab);
+  };
+});
+```
+
+#### The JSHint Task
+
+* Next, we are going to set up our first Grunt task. The JSHint task validates our JavaScript code and points out errors and gives warnings about minor violations. To do this, you need to include some Grunt modules that help us with the tasks. Install the following modules by typing the following at the prompt:
+
+```
+npm install grunt-contrib-jshint --save-dev
+npm install jshint-stylish --save-dev
+npm install time-grunt --save-dev
+npm install jit-grunt --save-dev 
+```
+
+The first one installs the Grunt module for JSHint, and the second one adds further to print out the messages from JSHint in a better format. The time-grunt module generates time statistics about how much time each task consumes, and jit-grunt enables us to include the necessary downloaded Grunt modules when needed for the tasks.
+
+* Now, configure the JSHint task in the Gruntfile as follows, by including the code inside the function in *Gruntfile.js*:
+
+```javascript
+// Time how long tasks take. Can help when optimizing build times
+require('time-grunt')(grunt);
+
+// Automatically load required Grunt tasks
+require('jit-grunt')(grunt);
+
+// Define the configuration for all the tasks
+grunt.initConfig({
+  pkg: grunt.file.readJSON('package.json'),
+
+  // Make sure code styles are up to par and there are no obvious mistakes
+  jshint: {
+    options: {
+      jshintrc: '.jshintrc',
+      reporter: require('jshint-stylish')
+    },
+    
+    all: {
+      src: [
+        'Gruntfile.js',
+        'app/scripts/{,*/}*.js'
+      ]
+    }
+  }
+});
+
+grunt.registerTask('build', [
+  'jshint'
+]);
+
+grunt.registerTask('default',['build']);
+```
+
+In the above, we have set up time-grunt and jit-grunt to time the tasks, and load Grunt modules when needed. The JSHint task is set to examine all the JavaScript files in the app/scripts folder, and the Gruntfile.js and generate any reports of JS errors or warnings. We have set up a Grunt task named build, that runs the jshint task and the build task is also registered as the default task.
+
+* Next, create a file named *.jshintrc* (Don't forget the . in front of jshintrc) in the conFusion folder, and include the following in the file:
+
+```
+{
+  "bitwise": true,
+  "browser": true,
+  "curly": true,
+  "eqeqeq": true,
+  "esnext": true,
+  "latedef": true,
+  "noarg": true,
+  "node": true,
+  "strict": true,
+  "undef": true,
+  "unused": true,
+  "globals": {
+    "angular": false
+  }
+}
+```
+* Now you can run the grunt task by typing the following at the prompt:
+
+`grunt`
+
+#### Copying the Files and Cleaning Up the Dist Folder
+
+* Next you will install the Grunt modules to copy over files to a distribution folder named dist, and clean up the dist folder when needed. To do this, install the following Grunt modules:
+
+```
+npm install grunt-contrib-copy --save-dev
+npm install grunt-contrib-clean --save-dev
+```
+
+* You will now add the code to perform the copying of files to the dist folder, and cleaning up the dist folder. To do this, add the following code to Gruntfile.js. This should be added right after the configuration of the JSHint task.:
+
+```javascript
+},
+
+copy: {
+  dist: {
+    cwd: 'app',
+    src: [ '**','!styles/**/*.css','!scripts/**/*.js' ],
+    dest: 'dist',
+    expand: true
+  },
+  
+  fonts: {
+    files: [
+      {
+        //for bootstrap fonts
+        expand: true,
+        dot: true,
+        cwd: 'bower_components/bootstrap/dist',
+        src: ['fonts/*.*'],
+        dest: 'dist'
+      }, {
+        //for font-awesome
+        expand: true,
+        dot: true,
+        cwd: 'bower_components/font-awesome',
+        src: ['fonts/*.*'],
+        dest: 'dist'
+      }
+    ]
+  }
+},
+
+clean: {
+  build: {
+    src: [ 'dist/']
+  }
+}
+```
+
+* Then, update the Grunt build task in the file as follows:
+
+```
+grunt.registerTask('build', [
+  'clean',
+  'jshint',
+  'copy'
+]);
+```
+
+* You can run Grunt and see what it generates.
+
+#### Preparing the Distribution Folder and Files
+
+* We are now going to use the Grunt *usemin* module together with *concat, cssmin, uglify* and *filerev* to prepare the distribution folder. To do this, install the following Grunt modules:
+
+```
+npm install grunt-contrib-concat --save-dev
+npm install grunt-contrib-cssmin --save-dev
+npm install grunt-contrib-uglify --save-dev
+npm install grunt-filerev --save-dev
+npm install grunt-usemin --save-dev
+```
+
+* Next, update the task configuration within the Gruntfile.js with the following additional code to introduce the new tasks:
+
+```javascript
+},
+    useminPrepare: {
+        html: 'app/menu.htm},
+
+useminPrepare: {
+  html: 'app/menu.html',
+  options: {
+    dest: 'dist'
+  }
+},
+
+// Concat
+concat: {
+  options: {
+    separator: ';'
+  },
+  
+  // dist configuration is provided by useminPrepare
+  dist: {}
+},
+
+// Uglify
+uglify: {
+  // dist configuration is provided by useminPrepare
+  dist: {}
+},
+
+cssmin: {
+  dist: {}
+},
+
+// Filerev
+filerev: {
+  options: {
+    encoding: 'utf8',
+    algorithm: 'md5',
+    length: 20
+  },
+  
+  release: {
+    // filerev:release hashes(md5) all assets (images, js and css )
+    // in dist directory
+    files: [{
+      src: [
+        'dist/scripts/*.js',
+        'dist/styles/*.css',
+      ]
+    }]
+  }
+},
+  
+// Usemin
+// Replaces all assets with their revved version in html and css files.
+// options.assetDirs contains the directories for finding the assets
+// according to their relative paths
+usemin: {
+  html: ['dist/*.html'],
+  css: ['dist/styles/*.css'],
+  options: {
+    assetsDirs: ['dist', 'dist/styles']
+  }
+},
+```
+
+* Next, update the jit-grunt configuration as follows, to inform it that useminPrepare task depends on the usemin package:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #### Updated: February-13th-2017
