@@ -777,7 +777,7 @@ npm install grunt-usemin --save-dev
 
 * Next, update the task configuration within the Gruntfile.js with the following additional code to introduce the new tasks:
 
----
+```
 },
     useminPrepare: {
         html: 'app/menu.htm},
@@ -840,7 +840,7 @@ usemin: {
     assetsDirs: ['dist', 'dist/styles']
   }
 },
----
+```
 
 * Next, update the jit-grunt configuration as follows, to inform it that useminPrepare task depends on the usemin package:
 
