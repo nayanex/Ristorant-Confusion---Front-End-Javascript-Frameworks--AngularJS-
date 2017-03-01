@@ -777,7 +777,7 @@ npm install grunt-usemin --save-dev
 
 * Next, update the task configuration within the Gruntfile.js with the following additional code to introduce the new tasks:
 
-```javascript
+---
 },
     useminPrepare: {
         html: 'app/menu.htm},
@@ -840,11 +840,97 @@ usemin: {
     assetsDirs: ['dist', 'dist/styles']
   }
 },
-```
+---
 
 * Next, update the jit-grunt configuration as follows, to inform it that useminPrepare task depends on the usemin package:
 
+```javascript
+require('jit-grunt')(grunt, {
+  useminPrepare: 'grunt-usemin'
+});
+```
 
+* Next, update the Grunt build task as follows:
+
+```javascript
+grunt.registerTask('build', [
+  'clean',
+  'jshint',
+  'useminPrepare',
+  'concat',
+  'cssmin',
+  'uglify',
+  'copy',
+  'filerev',
+  'usemin'
+]);
+```
+
+* Now if you run Grunt, it will create a dist folder with the files structured correctly to be distributed to a server to host your website.
+
+#### Watch, Connect and Serve Tasks
+
+* The final step is to use the Grunt modules watch, connect and watch, to spin up a web server and keep a watch on the files and automatically reload the browser when any of the watched files are updated. To do this, install the following grunt modules:
+
+```
+npm install grunt-contrib-watch --save-dev
+npm install grunt-contrib-connect --save-dev
+```
+
+* After this, we will configure the connect and watch tasks by adding the following code to the Grunt file:
+
+```javascript
+watch: {
+  copy: {
+    files: [ 'app/**', '!app/**/*.css', '!app/**/*.js'],
+    tasks: [ 'build' ]
+  },
+  
+  scripts: {
+    files: ['app/scripts/app.js'],
+    tasks:[ 'build']
+  },
+  
+  styles: {
+    files: ['app/styles/mystyles.css'],
+    tasks:['build']
+  },
+  
+  livereload: {
+    options: {
+      livereload: '<%= connect.options.livereload %>'
+    },
+    
+    files: [
+      'app/{,*/}*.html',
+      '.tmp/styles/{,*/}*.css',
+      'app/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+    ]
+  }
+},
+
+connect: {
+  options: {
+    port: 9000,
+    // Change this to '0.0.0.0' to access the server from outside.
+    hostname: 'localhost',
+    livereload: 35729
+  },
+  
+  dist: {
+    options: {
+      open: true,
+      base:{
+        path: 'dist',
+        options: {
+          index: 'menu.html',
+          maxAge: 300000
+        }
+      }
+    }
+  }
+},
+```
 
 
 
